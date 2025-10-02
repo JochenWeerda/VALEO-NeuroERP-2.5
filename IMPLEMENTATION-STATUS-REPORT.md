@@ -226,6 +226,92 @@ packages/
 
 ---
 
+## 🔄 Orchestrierte Standard-Workflows
+
+Diese sind **keine eigenen Domains**, sondern koordinierte Prozesse über mehrere Domains.
+
+### 1. 🆕 Setup-Flow (Ersteinrichtung)
+**Orchestrator:** scheduler-domain
+
+**Beteiligte Domains:** CRM, Finance, HR, Inventory, Regulatory, Integration, Audit
+
+**Schritte:**
+1. Mandantenanlage (tenantId, Firmendaten)
+2. Grundstammdaten-Import
+3. Rollen & Berechtigungen
+4. Datenmigration (CSV/Excel/API)
+5. KI-Assistenz (Mapping-Vorschläge)
+
+**Output:** Betriebsbereiter Mandant mit Audit-Trail
+
+---
+
+### 2. 📊 Inventur-Flow (Jährliche Bestandsaufnahme)
+**Orchestrator:** scheduler-domain (Trigger: 31.12. 23:55 Uhr)
+
+**Beteiligte Domains:** Inventory, Weighing, Quality, Finance, Document, Audit
+
+**Schritte:**
+1. Inventurauftrag erstellen (je Lager/Silo)
+2. Zählungen & Verwiegungen (Mobile, offline-fähig)
+3. Qualitätsproben (optional)
+4. Abweichungsanalyse (Soll-Ist)
+5. Bewertung & Buchungen (GuV, Jahresabschluss)
+6. Revisionssichere Dokumentation
+
+**Output:** Inventurlisten (PDF), Abweichungsberichte, Buchungsjournal
+
+---
+
+### 3. 🔄 Migration-Flow (Datenmigration & Schnittstellen)
+**Orchestrator:** scheduler-domain + integration-domain
+
+**Beteiligte Domains:** Integration, Inventory, CRM, Procurement, Analytics, Audit
+
+**Schritte:**
+1. CSV/Excel Import (Stamm- & Bewegungsdaten)
+2. API-basierte Migration (L3, SAP, Odoo)
+3. Mapping-Engine (KI-gestützt)
+4. Error-Handling (DLQ, Retry)
+5. Audit-Trail (Importdateien, Mappings, Fehler)
+
+**Output:** Migrierte Daten, Mapping-Reports, Error-Logs
+
+---
+
+### 4. 🚀 Release-Flow (Programm-Updates)
+**Orchestrator:** scheduler-domain + CI/CD
+
+**Beteiligte Domains:** Analytics, Notifications, Document, Audit
+
+**Schritte:**
+1. Release anlegen (Version, Changelog)
+2. Rollout-Plan (Blue/Green, Canary, Rolling)
+3. Pre-Checks (Health, DB-Kompatibilität)
+4. Deployment-Trigger (CI/CD Webhook)
+5. Post-Checks (Error-Rate, Latenzen)
+6. Wellenweise Rollouts (Tenant-basiert)
+7. Rollback bei Fehlern (Kill-Switch)
+8. Benachrichtigungen (Wartungsfenster)
+9. KPI-Vergleich (Vorher/Nachher)
+
+**Output:** Deployment-Report, KPI-Vergleich, Audit-Trail
+
+---
+
+## 🔗 Workflow-Abhängigkeiten
+
+| Workflow | Benötigt Domains | Status |
+|----------|------------------|--------|
+| Setup-Flow | CRM, Finance, HR, Inventory | ⏳ 0/5 |
+| Inventur-Flow | Inventory, Weighing, Finance | ⏳ 0/3 |
+| Migration-Flow | Integration, Analytics | ⏳ 1/2 (Analytics ✅) |
+| Release-Flow | Analytics, Notifications, Audit | ✅ 3/3 **READY** |
+
+**Release-Flow ist bereits produktionsbereit!** 🎉
+
+---
+
 ## 📈 Nächste Meilensteine
 
 - [ ] **Contracts-Domain** implementieren
